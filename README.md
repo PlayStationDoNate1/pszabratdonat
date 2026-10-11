@@ -1,0 +1,2 @@
+# pszabratdonat
+PlayStation zabrat donat
