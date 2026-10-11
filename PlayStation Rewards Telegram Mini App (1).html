@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Забрать донат • PlayStation Style</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #070913;
+      --ps-blue: #00439c;
+      --ps-neon: #0070d1;
+      --ps-cyan: #00f0ff;
+      --triangle-color: #00e599;
+      --circle-color: #ff3b69;
+      --cross-color: #3b82f6;
+      --square-color: #eab308;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    .font-ps {
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    /* Liquid Glass styling */
+    .glass-panel {
+      background: rgba(16, 24, 48, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .glass-light {
+      background: rgba(255, 255, 255, 0.75) !important;
+      border: 1px solid rgba(255, 255, 255, 0.6) !important;
+      box-shadow: 0 12px 30px rgba(0, 30, 80, 0.1) !important;
+      color: #0b1329 !important;
+    }
+
+    .glass-button {
+      background: linear-gradient(135deg, rgba(0, 112, 209, 0.8) 0%, rgba(0, 71, 171, 0.85) 100%);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 25px rgba(0, 112, 209, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.3);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-button:active {
+      transform: scale(0.97);
+      box-shadow: 0 0 15px rgba(0, 112, 209, 0.8);
+    }
+
+    /* Ambient Floating symbols */
+    .floating-shape {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.18;
+      animation: float 14s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-40px) rotate(180deg); }
+      100% { transform: translateY(0px) rotate(360deg); }
+    }
+
+    .pulse-glow {
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 25px rgba(0, 112, 209, 0.5); }
+      50% { box-shadow: 0 0 40px rgba(0, 240, 255, 0.8), 0 0 60px rgba(0, 112, 209, 0.3); }
+    }
+  </style>
+</head>
+<body id="app-root" class="bg-[#060814] text-white min-h-screen transition-colors duration-300 relative flex flex-col items-center p-4">
+
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <!-- Triangle -->
+    <svg class="floating-shape w-16 h-16 top-10 left-6 text-[#00e599]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="animation-delay: 0s;">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4L3 19h18L12 4z" />
+    </svg>
+    <!-- Circle -->
+    <svg class="floating-shape w-20 h-20 top-40 right-4 text-[#ff3b69]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="animation-delay: 3s;">
+      <circle cx="12" cy="12" r="9" />
+    </svg>
+    <!-- Cross -->
+    <svg class="floating-shape w-14 h-14 bottom-48 left-10 text-[#0070d1]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="animation-delay: 6s;">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+    <!-- Square -->
+    <svg class="floating-shape w-16 h-16 bottom-20 right-8 text-[#eab308]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="animation-delay: 9s;">
+      <rect x="4" y="4" width="16" height="16" rx="2" />
+    </svg>
+  </div>
+
+  <header class="w-full max-w-md flex items-center justify-between z-10 py-2 mb-2">
+    <div class="flex items-center gap-2">
+      <!-- PS Shapes Micro Bar -->
+      <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+        <span class="w-2.5 h-2.5 border-2 border-[#00e599] rounded-sm transform rotate-45"></span>
+        <span class="w-2.5 h-2.5 border-2 border-[#ff3b69] rounded-full"></span>
+        <span class="text-[10px] font-bold text-[#0070d1] leading-none">✕</span>
+        <span class="w-2.5 h-2.5 border-2 border-[#eab308] rounded-sm"></span>
+      </div>
+      <span class="text-xs font-semibold uppercase tracking-wider text-cyan-400">PS Network Hub</span>
+    </div>
+
+    <!-- Quick Action Controls -->
+    <div class="flex items-center gap-2">
+      <!-- Language Switcher -->
+      <button id="lang-btn" class="glass-panel text-xs font-bold px-3 py-1.5 rounded-xl text-white hover:bg-white/15 transition flex items-center gap-1">
+        <span id="lang-indicator">RU</span>
+      </button>
+      <!-- Theme Switcher -->
+      <button id="theme-btn" class="glass-panel p-2 rounded-xl text-white hover:bg-white/15 transition" title="Toggle Theme">
+        <svg id="theme-icon" class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.03 9.03 0 008.354-5.646z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="w-full max-w-md flex flex-col gap-4 z-10 flex-grow pb-10">
+    <div class="glass-panel rounded-2xl p-4 flex items-center justify-between border-cyan-500/20">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-700 to-cyan-500 flex items-center justify-center shadow-lg shadow-cyan-500/20 font-ps text-xl font-bold">
+          ID
+        </div>
+        <div>
+          <div class="text-xs text-cyan-300 font-semibold uppercase tracking-wide" id="profile-status">Игрок PlayStation</div>
+          <div class="text-base font-bold flex items-center gap-1.5">
+            <span id="user-display-name">Player#7492</span>
+            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-[11px] text-gray-400" id="balance-label">Бонусный пул</div>
+        <div class="text-lg font-extrabold text-cyan-400 font-ps tracking-wide">2,500 PSX</div>
+      </div>
+    </div>
+
+    <div class="glass-panel rounded-3xl p-6 text-center border-blue-500/30 relative overflow-hidden">
+      <!-- Glow beam -->
+      <div class="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-32 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <!-- Trophy Badge -->
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-b from-blue-500/30 to-blue-900/40 border border-cyan-400/30 mb-3 shadow-inner">
+        <svg class="w-10 h-10 text-cyan-300 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+
+      <h1 id="title-main" class="text-2xl font-extrabold tracking-tight font-ps uppercase">Специальная Награда</h1>
+      <p id="desc-main" class="text-xs text-gray-300 mt-1 max-w-xs mx-auto">
+        Получите эксклюзивный игровой бонус для вашего профиля в один клик.
+      </p>
+
+      <!-- Main Action Claim Button -->
+      <div class="mt-6" id="claim-area">
+        <button id="claim-btn" class="glass-button pulse-glow w-full py-4 px-6 rounded-2xl text-lg font-bold tracking-wide uppercase flex items-center justify-center gap-3">
+          <svg class="w-6 h-6 text-cyan-200" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          <span id="claim-btn-text">ЗАБРАТЬ ДОНАТ</span>
+        </button>
+      </div>
+
+      <!-- Active Timer UI (Hidden by default) -->
+      <div id="timer-card" class="mt-4 p-4 rounded-2xl bg-blue-950/40 border border-blue-400/20 hidden">
+        <div class="text-xs text-cyan-400 uppercase font-semibold mb-1" id="timer-status-text">Ожидание следующего доната</div>
+        <div id="countdown-display" class="font-ps text-4xl font-bold tracking-widest text-cyan-300 drop-shadow-[0_0_12px_rgba(0,240,255,0.6)]">
+          02:00:00
+        </div>
+        <div class="w-full bg-white/10 rounded-full h-2 mt-3 overflow-hidden">
+          <div id="timer-progress" class="bg-gradient-to-r from-blue-500 to-cyan-400 h-full w-full transition-all duration-1000"></div>
+        </div>
+        <div class="text-[10px] text-gray-400 mt-2" id="timer-info-text">Таймер активен. Бонус находится в обработке.</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <!-- Leave Feedback -->
+      <button id="btn-open-feedback" class="glass-panel p-4 rounded-2xl flex flex-col items-start gap-2 hover:bg-white/10 transition text-left">
+        <div class="p-2 rounded-xl bg-yellow-500/20 text-yellow-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-sm font-bold" id="card-feedback-title">Отзыв</div>
+          <div class="text-[11px] text-gray-400" id="card-feedback-desc">Поделитесь впечатлением</div>
+        </div>
+      </button>
+
+      <!-- Support -->
+      <button id="btn-open-support" class="glass-panel p-4 rounded-2xl flex flex-col items-start gap-2 hover:bg-white/10 transition text-left">
+        <div class="p-2 rounded-xl bg-cyan-500/20 text-cyan-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="text-sm font-bold" id="card-support-title">Поддержка</div>
+          <div class="text-[11px] text-gray-400" id="card-support-desc">Служба заботы 24/7</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="glass-panel rounded-2xl p-4">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold uppercase tracking-wider text-gray-300" id="trophies-title">Награды и достижения</span>
+        <span class="text-[11px] text-cyan-400 font-semibold">3 / 4 получено</span>
+      </div>
+      <div class="grid grid-cols-4 gap-2 text-center">
+        <div class="p-2.5 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center">
+          <div class="text-lg">🏆</div>
+          <div class="text-[10px] mt-1 font-semibold text-gray-200">First Try</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center">
+          <div class="text-lg">⭐</div>
+          <div class="text-[10px] mt-1 font-semibold text-gray-200">PS Club</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white/5 border border-white/10 flex flex-col items-center">
+          <div class="text-lg">⚡</div>
+          <div class="text-[10px] mt-1 font-semibold text-gray-200">Speedy</div>
+        </div>
+        <div class="p-2.5 rounded-xl bg-white/5 border border-dashed border-white/20 flex flex-col items-center opacity-40">
+          <div class="text-lg">🔒</div>
+          <div class="text-[10px] mt-1 font-semibold text-gray-400">Platinum</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="confirm-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-300">
+    <div class="glass-panel w-full max-w-sm rounded-3xl p-6 border-cyan-400/40 transform scale-95 transition-transform duration-300 text-center" id="confirm-modal-box">
+      <!-- PlayStation Shapes Icon Header -->
+      <div class="flex justify-center items-center gap-2 mb-4">
+        <span class="w-3 h-3 border-2 border-[#00e599] rounded-sm transform rotate-45"></span>
+        <span class="w-3 h-3 border-2 border-[#ff3b69] rounded-full"></span>
+        <span class="text-xs font-bold text-[#0070d1]">✕</span>
+        <span class="w-3 h-3 border-2 border-[#eab308] rounded-sm"></span>
+      </div>
+
+      <h3 class="text-xl font-bold font-ps uppercase tracking-wider text-cyan-300" id="modal-warning-title">Важное уведомление</h3>
+      <div class="my-4 text-xs leading-relaxed text-gray-200 bg-white/5 p-4 rounded-2xl border border-white/10" id="modal-warning-text">
+        Уважаемый пользователь! Если вы закроете окно, вы не сможете повторно забрать награду в этой сессии.
+      </div>
+      <button id="btn-understand" class="glass-button w-full py-3.5 px-4 rounded-xl font-bold text-sm tracking-wide uppercase">
+        <span id="btn-understand-text">Я ВСЁ ПОНЯЛ</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="feedback-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-300">
+    <div class="glass-panel w-full max-w-sm rounded-3xl p-6 border-cyan-400/30 transform scale-95 transition-transform duration-300">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold font-ps uppercase" id="feedback-header">Оставить отзыв</h3>
+        <button id="close-feedback-btn" class="text-gray-400 hover:text-white text-lg">✕</button>
+      </div>
+      <!-- Star ratings -->
+      <div class="flex justify-center gap-2 mb-4" id="star-container">
+        <button class="star-btn text-2xl text-yellow-400 hover:scale-125 transition" data-val="1">★</button>
+        <button class="star-btn text-2xl text-yellow-400 hover:scale-125 transition" data-val="2">★</button>
+        <button class="star-btn text-2xl text-yellow-400 hover:scale-125 transition" data-val="3">★</button>
+        <button class="star-btn text-2xl text-yellow-400 hover:scale-125 transition" data-val="4">★</button>
+        <button class="star-btn text-2xl text-yellow-400 hover:scale-125 transition" data-val="5">★</button>
+      </div>
+      <textarea id="feedback-textarea" class="w-full h-24 bg-white/5 border border-white/15 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-cyan-400 placeholder-gray-500" placeholder="Напишите пару слов..."></textarea>
+      <button id="btn-submit-feedback" class="glass-button w-full mt-3 py-3 rounded-xl font-bold text-xs uppercase tracking-wide">
+        Отправить отзыв
+      </button>
+    </div>
+  </div>
+
+  <div id="support-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden opacity-0 transition-opacity duration-300">
+    <div class="glass-panel w-full max-w-sm rounded-3xl p-6 border-cyan-400/30 transform scale-95 transition-transform duration-300 text-center">
+      <div class="w-12 h-12 mx-auto rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold font-ps uppercase" id="support-header">Служба поддержки</h3>
+      <p class="text-xs text-gray-300 my-3" id="support-sub">Операторы ответят в течение нескольких минут.</p>
+      <div class="p-3 bg-white/5 border border-white/10 rounded-xl text-xs text-left mb-4">
+        <div>📍 <b>Статус сети:</b> Все сервисы онлайн</div>
+        <div>⏱ <b>Среднее время ответа:</b> ~2 минуты</div>
+      </div>
+      <div class="flex gap-2">
+        <button id="btn-close-support" class="w-1/2 py-2.5 rounded-xl bg-white/10 text-xs font-semibold">Закрыть</button>
+        <button id="btn-tg-chat" class="w-1/2 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 font-semibold text-xs transition">Написать</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 glass-panel border-cyan-400/40 text-xs px-4 py-2.5 rounded-full z-50 hidden opacity-0 transition-opacity">
+    Сообщение сохранено!
+  </div>
+
+  <script>
+    // Telegram Web App SDK Initialization
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+      if (window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+        const u = window.Telegram.WebApp.initDataUnsafe.user;
+        document.getElementById('user-display-name').textContent = u.first_name || 'Player';
+      }
+    }
+
+    // Localization strings
+    const translations = {
+      ru: {
+        profileStatus: 'Игрок PlayStation',
+        balanceLabel: 'Бонусный пул',
+        titleMain: 'Специальная Награда',
+        descMain: 'Получите эксклюзивный игровой бонус для вашего профиля в один клик.',
+        claimBtnText: 'ЗАБРАТЬ ДОНАТ',
+        timerStatus: 'Ожидание следующего доната',
+        timerInfo: 'Таймер активен. Бонус находится в обработке.',
+        cardFeedbackTitle: 'Отзыв',
+        cardFeedbackDesc: 'Поделитесь впечатлением',
+        cardSupportTitle: 'Поддержка',
+        cardSupportDesc: 'Служба заботы 24/7',
+        trophiesTitle: 'Награды и достижения',
+        modalWarnTitle: 'Важное уведомление',
+        modalWarnText: 'Уважаемый пользователь! Если вы закроете окно, вы не сможете повторно забрать награду в этой сессии.',
+        btnUnderstand: 'Я ВСЁ ПОНЯЛ',
+        feedbackHeader: 'Оставить отзыв',
+        supportHeader: 'Служба поддержки',
+        supportSub: 'Операторы ответят в течение нескольких минут.'
+      },
+      en: {
+        profileStatus: 'PlayStation Player',
+        balanceLabel: 'Bonus Pool',
+        titleMain: 'Special Reward',
+        descMain: 'Claim an exclusive game bonus for your gaming profile in one tap.',
+        claimBtnText: 'CLAIM DONATION',
+        timerStatus: 'Cooldown in progress',
+        timerInfo: 'Timer is active. Bonus distribution in process.',
+        cardFeedbackTitle: 'Feedback',
+        cardFeedbackDesc: 'Share your thoughts',
+        cardSupportTitle: 'Support',
+        cardSupportDesc: 'Help desk 24/7',
+        trophiesTitle: 'Trophies & Milestones',
+        modalWarnTitle: 'Important Notice',
+        modalWarnText: 'Dear user! If you close this window, you will not be able to claim the reward again in this session.',
+        btnUnderstand: 'I UNDERSTAND',
+        feedbackHeader: 'Leave Feedback',
+        supportHeader: 'Support Desk',
+        supportSub: 'Agents usually reply within a few minutes.'
+      }
+    };
+
+    let currentLang = 'ru';
+    let isDarkTheme = true;
+    let countdownInterval = null;
+    const TOTAL_SECONDS = 2 * 60 * 60; // 2 hours = 7200 sec
+
+    const langBtn = document.getElementById('lang-btn');
+    const langIndicator = document.getElementById('lang-indicator');
+    const themeBtn = document.getElementById('theme-btn');
+    const appRoot = document.getElementById('app-root');
+    const claimBtn = document.getElementById('claim-btn');
+    const confirmModal = document.getElementById('confirm-modal');
+    const confirmModalBox = document.getElementById('confirm-modal-box');
+    const btnUnderstand = document.getElementById('btn-understand');
+    const timerCard = document.getElementById('timer-card');
+    const countdownDisplay = document.getElementById('countdown-display');
+    const timerProgress = document.getElementById('timer-progress');
+    const toast = document.getElementById('toast');
+
+    // Modals
+    const feedbackModal = document.getElementById('feedback-modal');
+    const btnOpenFeedback = document.getElementById('btn-open-feedback');
+    const closeFeedbackBtn = document.getElementById('close-feedback-btn');
+    const btnSubmitFeedback = document.getElementById('btn-submit-feedback');
+
+    const supportModal = document.getElementById('support-modal');
+    const btnOpenSupport = document.getElementById('btn-open-support');
+    const btnCloseSupport = document.getElementById('btn-close-support');
+    const btnTgChat = document.getElementById('btn-tg-chat');
+
+    // Helper: Toast
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.remove('opacity-0');
+      }, 10);
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.classList.add('hidden'), 300);
+      }, 2500);
+    }
+
+    // Toggle Language
+    langBtn.addEventListener('click', () => {
+      currentLang = currentLang === 'ru' ? 'en' : 'ru';
+      langIndicator.textContent = currentLang.toUpperCase();
+      applyLanguage(currentLang);
+    });
+
+    function applyLanguage(lang) {
+      const t = translations[lang];
+      document.getElementById('profile-status').textContent = t.profileStatus;
+      document.getElementById('balance-label').textContent = t.balanceLabel;
+      document.getElementById('title-main').textContent = t.titleMain;
+      document.getElementById('desc-main').textContent = t.descMain;
+      document.getElementById('claim-btn-text').textContent = t.claimBtnText;
+      document.getElementById('timer-status-text').textContent = t.timerStatus;
+      document.getElementById('timer-info-text').textContent = t.timerInfo;
+      document.getElementById('card-feedback-title').textContent = t.cardFeedbackTitle;
+      document.getElementById('card-feedback-desc').textContent = t.cardFeedbackDesc;
+      document.getElementById('card-support-title').textContent = t.cardSupportTitle;
+      document.getElementById('card-support-desc').textContent = t.cardSupportDesc;
+      document.getElementById('trophies-title').textContent = t.trophiesTitle;
+      document.getElementById('modal-warning-title').textContent = t.modalWarnTitle;
+      document.getElementById('modal-warning-text').textContent = t.modalWarnText;
+      document.getElementById('btn-understand-text').textContent = t.btnUnderstand;
+      document.getElementById('feedback-header').textContent = t.feedbackHeader;
+      document.getElementById('support-header').textContent = t.supportHeader;
+      document.getElementById('support-sub').textContent = t.supportSub;
+    }
+
+    themeBtn.addEventListener('click', () => {
+      isDarkTheme = !isDarkTheme;
+      const glassPanels = document.querySelectorAll('.glass-panel');
+      if (!isDarkTheme) {
+        appRoot.classList.remove('bg-[#060814]', 'text-white');
+        appRoot.classList.add('bg-[#e8edf7]', 'text-slate-900');
+        glassPanels.forEach(el => el.classList.add('glass-light'));
+      } else {
+        appRoot.classList.add('bg-[#060814]', 'text-white');
+        appRoot.classList.remove('bg-[#e8edf7]', 'text-slate-900');
+        glassPanels.forEach(el => el.classList.remove('glass-light'));
+      }
+    });
+
+    claimBtn.addEventListener('click', () => {
+      confirmModal.classList.remove('hidden');
+      setTimeout(() => {
+        confirmModal.classList.remove('opacity-0');
+        confirmModalBox.classList.remove('scale-95');
+      }, 10);
+    });
+
+    btnUnderstand.addEventListener('click', () => {
+      // Close warning modal
+      confirmModal.classList.add('opacity-0');
+      confirmModalBox.classList.add('scale-95');
+      setTimeout(() => {
+        confirmModal.classList.add('hidden');
+      }, 300);
+
+      // Disable/hide claim button and activate timer
+      claimBtn.disabled = true;
+      claimBtn.classList.add('opacity-50', 'pointer-events-none');
+      timerCard.classList.remove('hidden');
+
+      startCountdown(TOTAL_SECONDS);
+      showToast(currentLang === 'ru' ? 'Награда принята в обработку!' : 'Reward is processing!');
+    });
+
+    function startCountdown(duration) {
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      let timeLeft = duration;
+
+      function updateDisplay() {
+        const hours = Math.floor(timeLeft / 3600);
+        const minutes = Math.floor((timeLeft % 3600) / 60);
+        const seconds = timeLeft % 60;
+
+        countdownDisplay.textContent = 
+          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+        const percentage = (timeLeft / TOTAL_SECONDS) * 100;
+        timerProgress.style.width = `${percentage}%`;
+
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval);
+          countdownDisplay.textContent = "00:00:00";
+          timerProgress.style.width = "0%";
+          // As requested: After timer ends, nothing happens.
+        } else {
+          timeLeft--;
+        }
+      }
+
+      updateDisplay();
+      countdownInterval = setInterval(updateDisplay, 1000);
+    }
+
+    // Feedback Modal logic
+    btnOpenFeedback.addEventListener('click', () => {
+      feedbackModal.classList.remove('hidden');
+      setTimeout(() => feedbackModal.classList.remove('opacity-0'), 10);
+    });
+    closeFeedbackBtn.addEventListener('click', () => {
+      feedbackModal.classList.add('opacity-0');
+      setTimeout(() => feedbackModal.classList.add('hidden'), 300);
+    });
+    btnSubmitFeedback.addEventListener('click', () => {
+      feedbackModal.classList.add('opacity-0');
+      setTimeout(() => feedbackModal.classList.add('hidden'), 300);
+      showToast(currentLang === 'ru' ? 'Спасибо за ваш отзыв!' : 'Thank you for your feedback!');
+    });
+
+    // Support Modal logic
+    btnOpenSupport.addEventListener('click', () => {
+      supportModal.classList.remove('hidden');
+      setTimeout(() => supportModal.classList.remove('opacity-0'), 10);
+    });
+    btnCloseSupport.addEventListener('click', () => {
+      supportModal.classList.add('opacity-0');
+      setTimeout(() => supportModal.classList.add('hidden'), 300);
+    });
+    btnTgChat.addEventListener('click', () => {
+      supportModal.classList.add('opacity-0');
+      setTimeout(() => supportModal.classList.add('hidden'), 300);
+      showToast(currentLang === 'ru' ? 'Переход в чат поддержки...' : 'Opening support chat...');
+    });
+  </script>
+</body>
+</html>
